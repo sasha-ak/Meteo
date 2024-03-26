@@ -17,6 +17,8 @@ function refreshWeather(response) {
   speedElement.innerHTML = `${response.data.wind.speed} km/h`;
   timeElement.innerHTML = formatDate(date);
   iconElement.innerHTML = `<img src="${response.data.condition.icon_url}" />`;
+
+  getForecast(response.data.city);
 }
 
 function formatDate(date) {
@@ -58,9 +60,9 @@ function handleSearchSubmit(event) {
 
 let searchFormElement = document.querySelector("#search-form");
 searchFormElement.addEventListener("submit", handleSearchSubmit);
-searchCity("Malaga");
 
-function displayForecast() {
+function displayForecast(response) {
+  let forecastElement = document.querySelector("#forecast");
   let days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
   let forecastHTML = "";
   days.forEach(function (day) {
@@ -79,9 +81,14 @@ function displayForecast() {
           </div>
           `;
   });
-  let forecastElement = document.querySelector("#forecast");
 
   forecastElement.innerHTML = forecastHTML;
 }
 
-displayForecast();
+function getForecast(city) {
+  let apiKey = "b2t5aaa2b0903bc42e03fo6f63f58de7";
+  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}&units=metric`;
+  axios(apiUrl).then(displayForecast);
+}
+
+searchCity("Malaga");
